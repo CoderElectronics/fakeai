@@ -1,7 +1,9 @@
 import pandas as pd
+import tarfile
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
 
 #load data
 all_data = pd.read_csv('data/allData.tsv', sep='\t')
-train = all_data[:Y]
-dev = all_data[Y:Z] #TODO: find X, Y, Z. Train is large, dev is 1% of train, test is ~20%?
-test = all_data[Z:]
+
+train_raw = all_data[all_data.text.not_null()]
