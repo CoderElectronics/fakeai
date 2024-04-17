@@ -1,0 +1,13 @@
+requests
+beautifulsoup4
+pandas
+numpy
+scikit-learn
+progress
+progressbar2
+alive-progress
+tqdm
+kaggleDownloader
+seaborn
+flask
+joblib
