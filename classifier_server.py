@@ -1,4 +1,4 @@
-import re, string, json
+import re, string, json, time
 import pandas as pd
 import numpy as np
 import seaborn as sns
@@ -54,18 +54,29 @@ vectorization = TfidfVectorizer()
 xv_train = vectorization.fit_transform(x_train)
 
 def query_ds(news):
+    tsm = [time.time()]
+
     testing_news = {"text": [news]}
 
     new_def_test = pd.DataFrame(testing_news)
     new_def_test["text"] = new_def_test["text"].apply(wordopt)
 
+    tsm.append(time.time() - tsm[0])
+
     new_x_test = new_def_test["text"]
     new_xv_test = vectorization.transform(new_x_test)
+
+    tsm.append(time.time() - tsm[0])
 
     pred_LR = model_LR.predict(new_xv_test)[0]
     pred_DT = model_DT.predict(new_xv_test)[0]
     pred_GBC = model_GBC.predict(new_xv_test)[0]
     pred_RFC = model_RFC.predict(new_xv_test)[0]
+
+    tsm.append(time.time() - tsm[0])
+
+    tsm[0] = 0
+    print("Response times: {}".format(tsm))
 
     return {
         "pred_lr": int(pred_LR),

@@ -13,7 +13,7 @@ def df_preproc(dfm):
 df_test = df_preproc(pd.read_csv("data/dev_nobert.csv"))
 
 # Stat values
-set_N = 10
+set_N = 5
 counter_stats = {
     "pass": 0,
     "fail": 0,
@@ -24,7 +24,7 @@ with PixelBar('Loading articles...', max=set_N) as bar:
     for idx, row in df_test.sample(n=set_N).iterrows():
         r = requests.post("http://127.0.0.1:5000/classify", json={"text": row["text"]})
         results = r.json()
-        print("Declared Truth: {}\nReal Results: \n{}\n".format(row["label"], json.dumps(results, indent=2)))
+        #print("Declared Truth: {}\nReal Results: \n{}\n".format(row["label"], json.dumps(results, indent=2)))
 
         if row["label"] - results["weighted_avg"] > 0.5 or row["label"] - results["weighted_avg"] < -0.5:
             counter_stats["fail"] += 1
