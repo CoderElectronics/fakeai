@@ -13,7 +13,7 @@ def df_preproc(dfm):
 df_test = df_preproc(pd.read_csv("data/dev_nobert.csv"))
 
 # Stat values
-set_N = 5
+set_N = 100
 counter_stats = {
     "pass": 0,
     "fail": 0,

@@ -110,4 +110,4 @@ def query_classify():
         return jsonify(query_ds(news))
 
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=True)
+    app.run(debug=True, use_reloader=False)
