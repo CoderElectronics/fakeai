@@ -11,3 +11,5 @@ kaggleDownloader
 seaborn
 flask
 joblib
+crayons
+nicegui
