@@ -12,8 +12,6 @@ def df_preproc(dfm):
     dfm = dfm[dfm["text"].str.strip() != ""]
     return dfm
 
-
-
 # Stat values
 """r = requests.post("http://127.0.0.1:5000/classify", json={"text": row["text"]})
 results = r.json()
