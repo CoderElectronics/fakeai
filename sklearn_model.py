@@ -20,40 +20,13 @@ from sklearn.ensemble import RandomForestClassifier
 # Load data sets
 Path("data/models").mkdir(parents=True, exist_ok=True)
 
-df = pd.read_csv("data/train_nobert.csv")
-df_test = pd.read_csv("data/test_nobert.csv")
+df = pd.read_csv("data/train.csv")
+df_test = pd.read_csv("data/test.csv")
 
-# Data clean
-def df_preproc(dfm):
-    dfm = dfm.drop(["title", ], axis=1)
-    dfm = dfm.loc[:, ~dfm.columns.str.contains('^Unnamed')]
-    dfm = dfm.dropna(subset=['text'])
-    dfm = dfm[dfm["text"].str.strip() != ""]
-    return dfm
-
-# Word cleaning
-def wordopt(text):
-    text = text.lower()
-    text = re.sub('\[.*?\]', '', text)
-    text = re.sub("\\W"," ",text)
-    text = re.sub('https?://\S+|www\.\S+', '', text)
-    text = re.sub('<.*?>+', '', text)
-    text = re.sub('[%s]' % re.escape(string.punctuation), '', text)
-    text = re.sub('\n', '', text)
-    text = re.sub('\w*\d\w*', '', text)
-    return text
-
-# Preproc and split data
+#split data
 with PixelBar('', max=6) as bar:
     bar.bar_prefix = 'Preprocessing data...'
     bar.update()
-
-    # Preprocess text and datasets
-    df = df_preproc(df)
-    df_test = df_preproc(df_test)
-
-    df["text"] = df["text"].apply(wordopt)
-    df_test["text"] = df_test["text"].apply(wordopt)
 
     x_train = df["text"]
     y_train = df["label"]

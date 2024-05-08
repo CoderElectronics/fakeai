@@ -18,6 +18,11 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import RandomForestClassifier
 
+import nltk
+nltk.download('stopwords')
+from nltk.corpus import stopwords
+from textblob import Word
+
 # Load models
 model_LR = load('data/models/lr.joblib')
 model_DT = load('data/models/dt.joblib')
@@ -26,14 +31,14 @@ model_RFC = load('data/models/rfc.joblib')
 
 score_weights = json.load(open('data/models/score_weights.json'))
 
-def df_preproc(dfm):
+def df_preproc(dfm): #outdated
     dfm = dfm.drop(["title", ], axis=1)
     dfm = dfm.loc[:, ~dfm.columns.str.contains('^Unnamed')]
     dfm = dfm.dropna(subset=['text'])
     dfm = dfm[dfm["text"].str.strip() != ""]
     return dfm
 
-def wordopt(text):
+def wordopt(text): #outdated
     text = text.lower()
     text = re.sub('\[.*?\]', '', text)
     text = re.sub("\\W"," ",text)
@@ -44,9 +49,28 @@ def wordopt(text):
     text = re.sub('\w*\d\w*', '', text)
     return text
 
-df = pd.read_csv("data/train_nobert.csv")
-df = df_preproc(df)
-df["text"] = df["text"].apply(wordopt)
+def pre_process(news): #TODO: test and verify this works
+    news['text'] = news['text'] + " " + news['title'] #add title to text
+    news.drop(['title', 'date', 'subject' ], axis =1, inplace=True ) #drop the title, date, and subject
+    news.rename(columns={'news_class': 'label'}, inplace=True)
+
+    news['text'] = news['text'].apply(lambda x : " ".join(x.lower() for x in x.split() ) )
+    news['text'] = news['text'].str.replace('[^\w\s]','')
+    news['text'] = news['text'].str.replace('\d', '' )
+
+    stop_words = set(stopwords.words('english')) #get english stopwords
+    punctuation = list(string.punctuation) #get punc
+    stop_words.update(punctuation)
+    news['text'] = news['text'].apply(lambda x: " ".join(x for x in x.split() if x not in stop_words )) #remove stopwords and punc
+    news['text'] = news['text'].apply(lambda x : " ".join([Word(word).lemmatize() for word in x.split()]) )
+    news['text'] = news['text'].apply(lambda x : " ".join(re.sub(r'http\S+', '', x ) for x in x.split() ) )
+    return news
+
+
+
+df = pd.read_csv("data/train.csv")
+#df = df_preproc(df)
+#df["text"] = df["text"].apply(wordopt)
 
 x_train, y_train = df["text"], df["label"]
 
@@ -55,6 +79,8 @@ xv_train = vectorization.fit_transform(x_train)
 
 def query_ds(news):
     tsm = [time.time()]
+
+    news = pre_process(news)
 
     testing_news = {"text": [news]}
 

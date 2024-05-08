@@ -20,6 +20,8 @@ fake_news = pd.read_csv("data/orig/True.csv")
 true_news['news_class'], fake_news['news_class'] = 1, 0
 news = pd.concat([true_news, fake_news])
 news.drop_duplicates(inplace = True)
+
+#preproc
 news['text'] = news['text'] + " " + news['title'] #add title to text
 news.drop(['title', 'date', 'subject' ], axis =1, inplace=True ) #drop the title, date, and subject
 news.rename(columns={'news_class': 'label'}, inplace=True)
@@ -35,6 +37,7 @@ news['text'] = news['text'].apply(lambda x: " ".join(x for x in x.split() if x n
 news['text'] = news['text'].apply(lambda x : " ".join([Word(word).lemmatize() for word in x.split()]) )
 news['text'] = news['text'].apply(lambda x : " ".join(re.sub(r'http\S+', '', x ) for x in x.split() ) )
 
-x = news['text']
-y = news['label']
-train_x, test_x, train_y, test_y = train_test_split(x, y, test_size=0.25, shuffle = True, random_state=11 )
+train, test = train_test_split(news, test_size=0.25, shuffle=True, random_state=11 )
+
+train.to_csv('data/train.csv', index=False)
+test.to_csv('data/test.csv', index=False)

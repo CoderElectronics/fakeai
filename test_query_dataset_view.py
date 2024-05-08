@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from nicegui import ui
 
 def df_preproc(dfm):
-    dfm = dfm.drop(["title", ], axis=1)
+    #dfm = dfm.drop(["title", ], axis=1)
     dfm = dfm.loc[:, ~dfm.columns.str.contains('^Unnamed')]
     dfm = dfm.dropna(subset=['text'])
     dfm = dfm[dfm["text"].str.strip() != ""]
@@ -17,8 +17,9 @@ def df_preproc(dfm):
 results = r.json()
 """
 
-df_test = df_preproc(pd.read_csv("data/dev_nobert.csv"))
-sample_articles = df_test.sample(n=10)
+#df_test = df_preproc(pd.read_csv("data/test.csv"))
+df_test = pd.read_csv("data/orig/WELFake_Dataset.csv")
+sample_articles = df_test.sample(n=20)
 
 editor_val = ""
 editor_results = {}
