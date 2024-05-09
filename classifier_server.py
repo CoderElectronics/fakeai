@@ -49,19 +49,18 @@ def wordopt(text): #outdated
     text = re.sub('\w*\d\w*', '', text)
     return text
 
-def pre_process(news): #lowercase, remove([^\w\s]), remove(\d), remove(stopwords), Word(word).lemmatize() for word in news, remove(r'http\S+')
-    news = news.lower()
-    news = news.replace('[^\w\s]', '')
-    news = news.replace(r'\d', '')
+def pre_process(news): #intake bad data
+    news = news.lower() #make all text lowercase
+    news = news.replace('[^\w\s]', '') #remove bad chars
+    news = news.replace(r'\d', '') #remove bad chars
 
-    stop_words = set(stopwords.words('english'))  # get english stopwords
-    punctuation = list(string.punctuation)  # get punc
-    stop_words.update(punctuation)
-    news = ' '.join([word for word in news.split() if word not in stop_words])
-    news = ' '.join([Word(word).lemmatize() for word in news.split()])
-    news = news.replace(r'http\S+', '')
-    print("PROCESS", news[:80])
-    return news
+    stop_words = set(stopwords.words('english'))  # get english stopwords (nltk)
+    punctuation = list(string.punctuation)  # get punc (string)
+    stop_words.update(punctuation) #add punc to stopwords
+    news = ' '.join([word for word in news.split() if word not in stop_words]) #remove stopwords and punc from text
+    news = ' '.join([Word(word).lemmatize() for word in news.split()]) #lemmatize the words
+    news = news.replace(r'http\S+', '') #remove any https artifacts
+    return news #return cleaned data
 
 df = pd.read_csv("data/train.csv")
 #df = df_preproc(df)
