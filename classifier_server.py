@@ -63,8 +63,6 @@ def pre_process(news): #lowercase, remove([^\w\s]), remove(\d), remove(stopwords
     print("PROCESS", news[:80])
     return news
 
-
-
 df = pd.read_csv("data/train.csv")
 #df = df_preproc(df)
 #df["text"] = df["text"].apply(wordopt)
@@ -77,7 +75,6 @@ xv_train = vectorization.fit_transform(x_train)
 def query_ds(news):
     tsm = [time.time()]
 
-    #print(news)
     news = pre_process(news)
 
     testing_news = {"text": [news]}
@@ -114,7 +111,9 @@ def query_ds(news):
                         / (score_weights["score_lr"]
                            + score_weights["score_dt"]
                            + score_weights["score_gbc"]
-                           + score_weights["score_rfc"])
+                           + score_weights["score_rfc"]),
+        "weights": score_weights,
+        "response_time": tsm[-1]
     }
 
 # Server
