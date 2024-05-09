@@ -3,15 +3,19 @@ from progress.bar import *
 import pandas as pd
 from urllib.parse import ParseResult, urlparse
 import crayons
+from sklearn.utils import shuffle
 
-set_N = 500
+set_N = 200
 def df_preproc(dfm):
     dfm = dfm.drop(["source_domain", "tweet_num"], axis=1)
     dfm = dfm.loc[:, ~dfm.columns.str.contains('^Unnamed')]
     dfm = dfm.dropna(subset=['news_url'])
     return dfm
 
-df = df_preproc(pd.read_csv("data/orig/FakeNewsNet.csv"))
+df_test = pd.read_csv("data/orig/FakeNewsNet.csv")
+df_test.drop_duplicates(inplace = True)
+df_test.dropna(inplace = True)
+df_test = shuffle(df_test)
 
 status = {
     'success_real': 0,
@@ -21,7 +25,7 @@ status = {
 }
 
 with PixelBar('Scraping page...', max=set_N) as bar:
-    for idx, row in df.sample(n=set_N).iterrows():
+    for idx, row in df_test.sample(n=set_N).iterrows():
         bar.bar_prefix = 'Scraping "{}"...'.format(str(row["title"])[:15])
         bar.update()
 
