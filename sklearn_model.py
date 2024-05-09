@@ -5,6 +5,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from joblib import dump, load
 from pathlib import Path
+from datetime import datetime
 
 from progress.bar import *
 from progress.spinner import *
@@ -87,12 +88,16 @@ with PixelBar('', max=6) as bar:
         "score_lr": LR.score(xv_test, y_test),
         "score_dt": DT.score(xv_test, y_test),
         "score_gbc": GBC.score(xv_test, y_test),
-        "score_rfc": RFC.score(xv_test, y_test)
+        "score_rfc": RFC.score(xv_test, y_test),
+        "num_training_articles": df.shape[0],
+        "model_date": datetime.today().strftime('%Y-%m-%d')
     }
     json.dump(scores, open('data/models/score_weights.json', mode='w'))
 
     # Results
-    print("\n\nLogistic regression prediction score: {}\n".format(scores["score_gbc"]))
+    print("\n\nNumber of training articles: {}".format(scores["num_training_articles"]))
+
+    print("Logistic regression prediction score: {}\n".format(scores["score_gbc"]))
 
     print("DTC prediction score: {}".format(scores["score_dt"]))
     print(classification_report(y_test, pred_dt))
