@@ -49,21 +49,18 @@ def wordopt(text): #outdated
     text = re.sub('\w*\d\w*', '', text)
     return text
 
-def pre_process(news): #TODO: test and verify this works
-    news['text'] = news['text'] + " " + news['title'] #add title to text
-    news.drop(['title', 'date', 'subject' ], axis =1, inplace=True ) #drop the title, date, and subject
-    news.rename(columns={'news_class': 'label'}, inplace=True)
+def pre_process(news): #lowercase, remove([^\w\s]), remove(\d), remove(stopwords), Word(word).lemmatize() for word in news, remove(r'http\S+')
+    news = news.lower()
+    news = news.replace('[^\w\s]', '')
+    news = news.replace(r'\d', '')
 
-    news['text'] = news['text'].apply(lambda x : " ".join(x.lower() for x in x.split() ) )
-    news['text'] = news['text'].str.replace('[^\w\s]','')
-    news['text'] = news['text'].str.replace('\d', '' )
-
-    stop_words = set(stopwords.words('english')) #get english stopwords
-    punctuation = list(string.punctuation) #get punc
+    stop_words = set(stopwords.words('english'))  # get english stopwords
+    punctuation = list(string.punctuation)  # get punc
     stop_words.update(punctuation)
-    news['text'] = news['text'].apply(lambda x: " ".join(x for x in x.split() if x not in stop_words )) #remove stopwords and punc
-    news['text'] = news['text'].apply(lambda x : " ".join([Word(word).lemmatize() for word in x.split()]) )
-    news['text'] = news['text'].apply(lambda x : " ".join(re.sub(r'http\S+', '', x ) for x in x.split() ) )
+    news = ' '.join([word for word in news.split() if word not in stop_words])
+    news = ' '.join([Word(word).lemmatize() for word in news.split()])
+    news = news.replace(r'http\S+', '')
+    print("PROCESS", news[:80])
     return news
 
 
@@ -80,6 +77,7 @@ xv_train = vectorization.fit_transform(x_train)
 def query_ds(news):
     tsm = [time.time()]
 
+    #print(news)
     news = pre_process(news)
 
     testing_news = {"text": [news]}
