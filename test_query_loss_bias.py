@@ -2,18 +2,17 @@ import requests, json
 import pandas as pd
 from progress.bar import *
 from progress.spinner import *
+from sklearn.utils import shuffle
 
-def df_preproc(dfm):
-    dfm = dfm.drop(["title", ], axis=1)
-    dfm = dfm.loc[:, ~dfm.columns.str.contains('^Unnamed')]
-    dfm = dfm.dropna(subset=['text'])
-    dfm = dfm[dfm["text"].str.strip() != ""]
-    return dfm
-
-df_test = df_preproc(pd.read_csv("data/dev_nobert.csv"))
+df_test = pd.read_csv("data/orig/WELFake_Dataset.csv")
+df_test.drop_duplicates(inplace = True)
+df_test.dropna(inplace = True)
+#df_test['text'] = df_test['text'] + " " + df_test['title'] #80.76% with this, same without
+df_test.drop(['title'], axis=1, inplace=True)
+df_test = shuffle(df_test)
 
 # Stat values
-set_N = 100
+set_N = 70000
 counter_stats = {
     "pass": 0,
     "fail": 0,
@@ -36,8 +35,9 @@ with PixelBar('Loading articles...', max=set_N) as bar:
 
 loss_dev = (counter_stats["sum"]/set_N)*100
 
-print("""
-Test statistics (n={})
+print("Percent predicted correct: ", counter_stats["pass"]/set_N*100, "%")
+
+print("""Test statistics (n={})
 - passed {}
 - failed {}
 - loss {}%
