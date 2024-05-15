@@ -18,6 +18,9 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import RandomForestClassifier
 
+import matplotlib.pyplot as plt
+from sklearn.metrics import ConfusionMatrixDisplay
+
 # Load data sets
 Path("data/models").mkdir(parents=True, exist_ok=True)
 
@@ -48,9 +51,9 @@ with PixelBar('', max=6) as bar:
 
     # Logistic regression
     LR = LogisticRegression()
-    LR.fit(xv_train,y_train)
+    LR.fit(xv_train, y_train)
     dump(LR, 'data/models/lr.joblib')
-    pred_lr=LR.predict(xv_test)
+    pred_lr = LR.predict(xv_test)
 
     bar.bar_prefix = 'Training decision tree model...'
     bar.next()
@@ -95,7 +98,37 @@ with PixelBar('', max=6) as bar:
     json.dump(scores, open('data/models/score_weights.json', mode='w'))
 
     # Results
-    print("\n\nNumber of training articles: {}".format(scores["num_training_articles"]))
+    fig, axs = plt.subplots(figsize=(10, 5), nrows=2, ncols=2)
+
+    ConfusionMatrixDisplay.from_predictions(y_test, pred_lr, ax=axs[0, 0])
+    axs[0, 0].xaxis.set_ticklabels(["true", "fake"])
+    axs[0, 0].yaxis.set_ticklabels(["true", "fake"])
+    _ = axs[0, 0].set_title(
+        f"Confusion Matrix for Logistic Regression"
+    )
+
+    ConfusionMatrixDisplay.from_predictions(y_test, pred_dt, ax=axs[1, 0])
+    axs[1, 0].xaxis.set_ticklabels(["true", "fake"])
+    axs[1, 0].yaxis.set_ticklabels(["true", "fake"])
+    _ = axs[1, 0].set_title(
+        f"Confusion Matrix for Decision Tree Classifier"
+    )
+
+    ConfusionMatrixDisplay.from_predictions(y_test, pred_gbc, ax=axs[0, 1])
+    axs[0, 1].xaxis.set_ticklabels(["true", "fake"])
+    axs[0, 1].yaxis.set_ticklabels(["true", "fake"])
+    _ = axs[0, 1].set_title(
+        f"Confusion Matrix for Gradient Boosting Classifier"
+    )
+
+    ConfusionMatrixDisplay.from_predictions(y_test, pred_rfc, ax=axs[1, 1])
+    axs[1, 1].xaxis.set_ticklabels(["fake", "true"])
+    axs[1, 1].yaxis.set_ticklabels(["fake", "true"])
+    _ = axs[1, 1].set_title(
+        f"Confusion Matrix for Random Forest Classifier"
+    )
+
+    print("\n\nNumber of training articles: {}\n".format(scores["num_training_articles"]))
 
     print("Logistic regression prediction score: {}\n".format(scores["score_gbc"]))
 
@@ -106,4 +139,6 @@ with PixelBar('', max=6) as bar:
     print(classification_report(y_test, pred_gbc))
 
     print("RF prediction score: {}".format(scores["score_rfc"]))
-    print(classification_report(y_test, pred_rfc))
+    print(classification_report(y_test, pred_rfc), end="")
+
+    plt.show()
