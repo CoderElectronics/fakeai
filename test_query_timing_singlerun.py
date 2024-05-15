@@ -22,7 +22,7 @@ with PixelBar('Performing requests...', max=set_N) as bar:
     for idx, row in df_test.sample(n=set_N).iterrows():
         start_time = time.time()
 
-        r = requests.post("http://127.0.0.1:5000/classify", json={"text": row["text"]})
+        r = requests.post("http://127.0.0.1:8003/classify", json={"text": row["text"]})
         results = r.json()
 
         time_N[idx_req] = (time.time() - start_time)

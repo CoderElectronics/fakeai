@@ -21,7 +21,7 @@ counter_stats = {
 
 with PixelBar('Loading articles...', max=set_N) as bar:
     for idx, row in df_test.sample(n=set_N).iterrows():
-        r = requests.post("http://127.0.0.1:5000/classify", json={"text": row["text"]})
+        r = requests.post("http://127.0.0.1:8003/classify", json={"text": row["text"]})
         results = r.json()
         #print("Declared Truth: {}\nReal Results: \n{}\n".format(row["label"], json.dumps(results, indent=2)))
 

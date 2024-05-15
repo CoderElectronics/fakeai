@@ -72,7 +72,7 @@ def main_view():
                     def process_query():
                         global editor_val, editor_results
 
-                        r = requests.post("http://127.0.0.1:5000/classify", json={"text": editor_val})
+                        r = requests.post("http://127.0.0.1:8003/classify", json={"text": editor_val})
                         editor_results = r.json()
                         refreshable_json.refresh()
 

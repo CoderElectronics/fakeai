@@ -44,7 +44,7 @@ with PixelBar('Scraping page...', max=set_N) as bar:
             article_text = soup.article.get_text(' ', strip=True)
             print("\n{}\n".format(article_text))
 
-            r = requests.post("http://127.0.0.1:5000/classify", json={"text": article_text})
+            r = requests.post("http://127.0.0.1:8003/classify", json={"text": article_text})
             results = r.json()
 
             if row["real"] - results["weighted_avg"] > 0.5 or row["real"] - results["weighted_avg"] < -0.5:
