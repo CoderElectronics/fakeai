@@ -15,3 +15,4 @@ crayons
 nicegui
 nltk
 textblob
+gunicorn
