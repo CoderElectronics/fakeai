@@ -132,4 +132,4 @@ def query_classify():
         return jsonify(query_ds(news))
 
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=False, port=8003)
+    app.run(debug=False, use_reloader=False, port=8003, host='0.0.0.0')
