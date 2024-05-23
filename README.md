@@ -1,8 +1,19 @@
 # FakeAI
 
-This is the sklearn based classification server for FakeAI.
+Welcome to FakeAI. We have created this as a capstone project for our
+2023-24 Cog*Works class. Please download the Chrome extension linked
+below and give it a try. Right now, we are hitting ~82% accuracy on detecting
+weather articles are true or fake. We analyze based off of article lenght, words used, 
+and word density (among other factors). It is important to note that this model
+does not fact check and information.
 
-### Install dependencies and setup
+### Download and use the Chrome Extension
+Please download FakeAI on the [Chrome Web Store](https://chromewebstore.google.com/detail/fakeai/ppgglflfncmmpmcoecnmfoecfdookflm)
+<br>Find source code available on [GitHub](https://github.com/CoderElectronics/fakeai-chrome)
+<br>Once the extension is installed in Chrome, highlight any text and right click. Then select "Sent to FakeAI". This will load a sidebar with statistics detailing the predicted validity of the text.
+
+### Install dependencies and setup (not needed for extension)
+This is the sklearn based classification server for FakeAI.
 Here is the basic process to install all dependencies, load data, and train a model for the classification server.
 
     pip3 install -r ./requirements.txt
