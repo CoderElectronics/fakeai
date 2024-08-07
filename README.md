@@ -1,11 +1,11 @@
 # FakeAI
 
 Welcome to FakeAI. We have created this as a capstone project for our
-2023-24 Cog*Works class. Please download the Chrome extension linked
+2023-24 CogWorks class. Please download the Chrome extension linked
 below and give it a try. Right now, we are hitting ~82% accuracy on detecting
-weather articles are true or fake. We analyze based off of article lenght, words used, 
+wheather articles are true or fake. We analyze based off of article length, words used, 
 and word density (among other factors). It is important to note that this model
-does not fact check and information.
+does not fact check information.
 
 ### Download and use the Chrome Extension
 Please download FakeAI on the [Chrome Web Store](https://chromewebstore.google.com/detail/fakeai/ppgglflfncmmpmcoecnmfoecfdookflm)
